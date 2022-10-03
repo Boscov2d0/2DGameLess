@@ -8,7 +8,6 @@ namespace Profile
         public readonly SubscriptionProperty<GameState> CurrentState;
         public readonly CarModel CurrentCar;
 
-
         public ProfilePlayer(float speedCar, GameState initialState) : this(speedCar)
         {
             CurrentState.Value = initialState;
