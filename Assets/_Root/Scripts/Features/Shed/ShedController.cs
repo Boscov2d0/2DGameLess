@@ -6,6 +6,7 @@ using UnityEngine;
 using Features.Inventory;
 using Features.Shed.Upgrade;
 using JetBrains.Annotations;
+using Features.Inventory.Items;
 
 namespace Features.Shed
 {
@@ -15,6 +16,8 @@ namespace Features.Shed
 
     internal class ShedController : BaseController, IShedController
     {
+        private readonly ResourcePath _inventoryViewPath = new ResourcePath("Prefabs/Inventory/InventoryView");
+        private readonly ResourcePath _itemsDataSourcePath = new ResourcePath("Configs/Inventory/ItemConfigDataSource");
         private readonly ResourcePath _viewPath = new ResourcePath("Prefabs/Shed/ShedView");
         private readonly ResourcePath _dataSourcePath = new ResourcePath("Configs/Shed/UpgradeItemConfigDataSource");
 
@@ -53,10 +56,30 @@ namespace Features.Shed
 
         private InventoryController CreateInventoryController(Transform placeForUi)
         {
-            var inventoryController = new InventoryController(placeForUi, _profilePlayer.Inventory);
+            InventoryView view = LoadInventoryView(placeForUi);
+            ItemsRepository repository = CreateItemsRepository();
+            var inventoryController = new InventoryController(view, _profilePlayer.Inventory, repository);
             AddController(inventoryController);
 
             return inventoryController;
+        }
+
+        private InventoryView LoadInventoryView(Transform placeForUi)
+        {
+            GameObject prefab = ResourcesLoader.LoadPrefab(_inventoryViewPath);
+            GameObject objectView = UnityEngine.Object.Instantiate(prefab, placeForUi, false);
+            AddGameObject(objectView);
+
+            return objectView.GetComponent<InventoryView>();
+        }
+
+        private ItemsRepository CreateItemsRepository() 
+        {
+            ItemConfig[] itemConfigs = ContentDataSourceLoader.LoadItemConfigs(_itemsDataSourcePath);
+            var repository = new ItemsRepository(itemConfigs);
+            AddRepository(repository);
+
+            return repository; 
         }
 
         private ShedView LoadView(Transform placeForUi)

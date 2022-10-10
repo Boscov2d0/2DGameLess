@@ -4,7 +4,6 @@ namespace Features.AbilitySystem.Abilities
     {
         public static readonly IAbility Default = new StubAbility();
 
-        public void Apply(IAbilityActivator activator)
-        { }
+        public void Apply(IAbilityActivator activator){ }
     }
 }
