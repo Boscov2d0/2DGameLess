@@ -147,8 +147,6 @@ namespace BattleScripts
                     DecreaseValue(_money);
                 }
                 CheckAvoidFightCondition();
-                _enemy.IncreaseKCrime();
-
             }
         }
 
